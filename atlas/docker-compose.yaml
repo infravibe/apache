@@ -1,0 +1,28 @@
+
+services:
+  atlas:
+    image: sburn/apache-atlas:2.3.0
+    platform: linux/amd64
+    container_name: apache-atlas
+    ports:
+      - "21000:21000"  # Atlas Web UI
+      - "9838:9838"    # Solr (embedded)
+      - "16000:16000"  # HBase Master RPC
+      - "16010:16010"  # HBase Web UI
+      - "2181:2181"    # Embedded Zookeeper (HBase)
+      - "9092:9092"    # Kafka (embedded)
+    volumes:
+      - atlas-data:/apache-atlas/data
+      - atlas-logs:/apache-atlas/logs
+      - atlas-conf:/apache-atlas/conf
+    networks:
+      - apache
+
+volumes:
+  atlas-data:
+  atlas-logs:
+  atlas-conf:
+
+networks:
+  apache:
+    external: true

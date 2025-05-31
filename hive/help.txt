@@ -1,0 +1,5 @@
+https://github.com/apache/hive/blob/master/packaging/src/docker/README.md
+
+docker compose exec hiveserver2 /bin/bash
+/opt/hive/bin/schematool -initSchema -dbType hive -metaDbType postgres -url jdbc:hive2://localhost:10000/default
+exit

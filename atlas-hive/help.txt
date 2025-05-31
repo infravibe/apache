@@ -1,0 +1,1 @@
+https://github.com/apache/hive/blob/master/packaging/src/docker/README.md

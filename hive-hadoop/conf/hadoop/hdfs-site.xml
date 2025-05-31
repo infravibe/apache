@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<configuration>
+  <property>
+    <n>dfs.webhdfs.enabled</n>
+    <value>true</value>
+    <description>Enable WebHDFS</description>
+  </property>
+
+  <property>
+    <n>dfs.permissions.enabled</n>
+    <value>false</value>
+    <description>Enable HDFS permissions</description>
+  </property>
+
+  <property>
+    <n>dfs.namenode.datanode.registration.ip-hostname-check</n>
+    <value>false</value>
+    <description>Skip hostname check for datanode registration</description>
+  </property>
+
+  <property>
+    <n>dfs.client.use.datanode.hostname</n>
+    <value>true</value>
+    <description>Use datanode hostname from client</description>
+  </property>
+
+  <property>
+    <n>dfs.datanode.use.datanode.hostname</n>
+    <value>true</value>
+    <description>Use hostname for datanode</description>
+  </property>
+
+  <property>
+    <n>dfs.namenode.rpc-bind-host</n>
+    <value>0.0.0.0</value>
+    <description>NameNode RPC bind host</description>
+  </property>
+
+  <property>
+    <n>dfs.namenode.servicerpc-bind-host</n>
+    <value>0.0.0.0</value>
+    <description>NameNode service RPC bind host</description>
+  </property>
+
+  <property>
+    <n>dfs.namenode.http-bind-host</n>
+    <value>0.0.0.0</value>
+    <description>NameNode HTTP bind host</description>
+  </property>
+
+  <property>
+    <n>dfs.namenode.https-bind-host</n>
+    <value>0.0.0.0</value>
+    <description>NameNode HTTPS bind host</description>
+  </property>
+
+  <property>
+    <n>dfs.replication</n>
+    <value>2</value>
+    <description>Default block replication</description>
+  </property>
+
+  <property>
+    <n>dfs.blocksize</n>
+    <value>134217728</value>
+    <description>Default block size (128MB)</description>
+  </property>
+
+  <property>
+    <n>dfs.namenode.name.dir</n>
+    <value>/opt/hadoop/data/namenode</value>
+    <description>NameNode data directory</description>
+  </property>
+
+  <property>
+    <n>dfs.datanode.data.dir</n>
+    <value>/opt/hadoop/data/datanode</value>
+    <description>DataNode data directory</description>
+  </property>
+
+  <property>
+    <n>dfs.namenode.checkpoint.dir</n>
+    <value>/opt/hadoop/data/namesecondary</value>
+    <description>Secondary NameNode checkpoint directory</description>
+  </property>
+
+  <property>
+    <n>dfs.namenode.checkpoint.edits.dir</n>
+    <value>/opt/hadoop/data/namesecondary</value>
+    <description>Secondary NameNode checkpoint edits directory</description>
+  </property>
+
+  <property>
+    <n>dfs.datanode.address</n>
+    <value>0.0.0.0:9866</value>
+    <description>DataNode address</description>
+  </property>
+
+  <property>
+    <n>dfs.datanode.http.address</n>
+    <value>0.0.0.0:9864</value>
+    <description>DataNode HTTP address</description>
+  </property>
+
+  <property>
+    <n>dfs.datanode.ipc.address</n>
+    <value>0.0.0.0:9867</value>
+    <description>DataNode IPC address</description>
+  </property>
+
+  <property>
+    <n>dfs.namenode.http-address</n>
+    <value>namenode:9870</value>
+    <description>NameNode HTTP address</description>
+  </property>
+
+  <property>
+    <n>dfs.namenode.rpc-address</n>
+    <value>namenode:9820</value>
+    <description>NameNode RPC address</description>
+  </property>
+</configuration>
