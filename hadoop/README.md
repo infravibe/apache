@@ -29,7 +29,7 @@ docker network create --driver=bridge apache
 ### 2. Start the Cluster
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### 3. Verify Cluster Status
@@ -37,7 +37,7 @@ docker-compose up -d
 Check if all services are running:
 
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 ## Service Endpoints
@@ -152,7 +152,7 @@ hadoop/
 
 3. **Web UIs Not Accessible**
     - Confirm ports are not blocked by firewall
-    - Check if containers are running: `docker-compose ps`
+    - Check if containers are running: `docker compose ps`
     - Verify port mappings in docker-compose.yaml
 
 4. **HDFS Safe Mode**
@@ -166,7 +166,7 @@ To add more DataNodes or NodeManagers:
 1. Copy the existing datanode/nodemanager service definition
 2. Change the hostname and container name
 3. Update port mappings to avoid conflicts
-4. Restart the cluster: `docker-compose up -d`
+4. Restart the cluster: `docker compose up -d`
 
 ## Performance Tuning
 
@@ -196,13 +196,13 @@ For production deployment, implement proper security measures including:
 To stop and remove all containers:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 To remove persistent volumes (⚠️ This will delete all data):
 
 ```bash
-docker-compose down -v
+docker compose down -v
 ```
 
 ## Support
