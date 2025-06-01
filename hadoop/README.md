@@ -134,7 +134,6 @@ hadoop/
 │   └── yarn-site.xml
 ├── docker-compose.yaml     # Docker Compose configuration
 ├── Dockerfile             # Custom Hadoop image with patches
-├── entrypoint.sh          # NameNode initialization script
 └── README.md              # This file
 ```
 
