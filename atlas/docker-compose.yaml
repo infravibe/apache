@@ -11,6 +11,8 @@ services:
       - "16010:16010"  # HBase Web UI
       - "2181:2181"    # Embedded Zookeeper (HBase)
       - "9092:9092"    # Kafka (embedded)
+      - "9026:9026"    # Zookeeper connect
+      - "9027:9027"    # Kafka connect
     volumes:
       - atlas-data:/apache-atlas/data
       - atlas-logs:/apache-atlas/logs
@@ -26,3 +28,4 @@ volumes:
 networks:
   apache:
     external: true
+    name: apache

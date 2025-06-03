@@ -1,0 +1,148 @@
+
+services:
+  atlas:
+    image: infravibe/atlas:2.4.0
+    platform: linux/amd64
+    container_name: atlas
+    stdin_open: true
+    tty: true
+    networks:
+      - apache
+    volumes:
+      - ./data:/home/atlas/data
+    ports:
+      - "21000:21000"
+    depends_on:
+      atlas-hbase:
+        condition: service_started
+      atlas-kafka:
+        condition: service_started
+      atlas-solr:
+        condition: service_started
+      atlas-zk:
+        condition: service_started
+    environment:
+      - ATLAS_SERVER_JAVA_VERSION="11"
+      - ATLAS_VERSION="2.4.0"
+    command:
+      - /home/atlas/scripts/atlas.sh
+
+  atlas-zk:
+    image: infravibe/atlas-zk:2.4.0
+    platform: linux/amd64
+    container_name: atlas-zk
+    networks:
+      - apache
+    ports:
+      - "2181:2181"
+
+  atlas-solr:
+    image: infravibe/atlas-solr:2.4.0
+    platform: linux/amd64
+    container_name: atlas-solr
+    networks:
+      - apache
+    ports:
+      - "8983:8983"
+
+#  atlas-hadoop:
+#    image: infravibe/atlas-hadoop:2.4.0-hadoop-3.3.6
+#    platform: linux/amd64
+#    container_name: atlas-hadoop
+#    stdin_open: true
+#    tty: true
+#    networks:
+#      - apache
+#    ports:
+#      - "9000:9000"
+#      - "8088:8088"
+#    healthcheck:
+#      test: "hdfs dfs -ls /"
+#      interval: 1m30s
+#      timeout: 10s
+#      retries: 30
+#      start_period: 40s
+#    environment:
+#      - HADOOP_VERSION="3.3.6"
+
+  atlas-hbase:
+    image: infravibe/atlas-hbase:2.4.0-hbase-2.5.0
+    platform: linux/amd64
+    container_name: atlas-hbase
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./conf/hbase/hbase-site.xml:/opt/hbase/conf/hbase-site.xml
+    networks:
+      - apache
+    ports:
+      - "16000:16000"
+      - "16010:16010"
+      - "16020:16020"
+      - "16030:16030"
+    depends_on:
+#      atlas-hadoop:
+#        condition: service_healthy
+      atlas-zk:
+        condition: service_started
+      atlas-kafka:
+        condition: service_started
+    environment:
+      - HBASE_VERSION="2.5.0"
+      - ATLAS_VERSION="2.4.0"
+
+#  atlas-hive:
+#    image: infravibe/atlas-hive:2.4.0-hive-3.1.3-hadoop-3.1.1
+#    platform: linux/amd64
+#    container_name: atlas-hive
+#    stdin_open: true
+#    tty: true
+#    networks:
+#      - apache
+#    ports:
+#      - "10000:10000"
+#      - "10002:10002"
+#    depends_on:
+#      atlas-db:
+#        condition: service_started
+##      atlas-hadoop:
+##        condition: service_healthy
+#      atlas-zk:
+#        condition: service_started
+#      atlas-kafka:
+#        condition: service_started
+#    environment:
+#      - HIVE_HADOOP_VERSION="3.1.1"
+#      - HIVE_VERSION="3.1.3"
+#      - ATLAS_VERSION="2.4.0"
+
+  atlas-db:
+    image: infravibe/atlas-db:2.4.0
+    platform: linux/amd64
+    container_name: atlas-db
+    networks:
+      - apache
+
+  atlas-kafka:
+    image: infravibe/atlas-kafka:2.4.0-kafka-2.8.2
+    platform: linux/amd64
+    container_name: atlas-kafka
+    stdin_open: true
+    tty: true
+    networks:
+      - apache
+    ports:
+      - "9092:9092"
+    depends_on:
+      atlas-zk:
+        condition: service_started
+    environment:
+      - KAFKA_VERSION="2.8.2"
+      - ATLAS_VERSION="2.4.0"
+
+
+networks:
+  apache:
+    external: true
+    name: apache
+
