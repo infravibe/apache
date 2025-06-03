@@ -1,0 +1,14 @@
+services:
+  atlas-zk:
+    image: infravibe/atlas-zk:2.4.0
+    platform: linux/amd64
+    container_name: atlas-zk
+    networks:
+      - apache
+    ports:
+      - "2181:2181"
+
+networks:
+  apache:
+    external: true
+    name: apache

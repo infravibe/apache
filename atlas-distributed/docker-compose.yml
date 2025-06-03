@@ -27,14 +27,14 @@ services:
     command:
       - /home/atlas/scripts/atlas.sh
 
-  atlas-zk:
-    image: infravibe/atlas-zk:2.4.0
-    platform: linux/amd64
-    container_name: atlas-zk
-    networks:
-      - apache
-    ports:
-      - "2181:2181"
+#  atlas-zk:
+#    image: infravibe/atlas-zk:2.4.0
+#    platform: linux/amd64
+#    container_name: atlas-zk
+#    networks:
+#      - apache
+#    ports:
+#      - "2181:2181"
 
   atlas-solr:
     image: infravibe/atlas-solr:2.4.0
@@ -116,12 +116,12 @@ services:
 #      - HIVE_VERSION="3.1.3"
 #      - ATLAS_VERSION="2.4.0"
 
-  atlas-db:
-    image: infravibe/atlas-db:2.4.0
-    platform: linux/amd64
-    container_name: atlas-db
-    networks:
-      - apache
+#  atlas-db:
+#    image: infravibe/atlas-db:2.4.0
+#    platform: linux/amd64
+#    container_name: atlas-db
+#    networks:
+#      - apache
 
   atlas-kafka:
     image: infravibe/atlas-kafka:2.4.0-kafka-2.8.2
