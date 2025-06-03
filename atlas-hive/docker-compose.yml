@@ -17,7 +17,7 @@ services:
       - apache
 
   metastore:
-    image: custom-hive-with-atlas:4.0.1
+    image: infravibe/atlas-hive:4.0.1
     platform: linux/amd64
     depends_on:
       - postgres
@@ -44,7 +44,7 @@ services:
       - apache
 
   hiveserver2:
-    image: custom-hive-with-atlas:4.0.1
+    image: infravibe/atlas-hive:4.0.1
     platform: linux/amd64
     user: root
     depends_on:
