@@ -9,6 +9,8 @@
     <property>
         <name>hbase.rootdir</name>
         <value>hdfs://namenode:9820/hbase</value>
+<!--        <value>hdfs://namenode:9820/hbase</value>-->
+        <value>hdfs://atlas-hadoop:9000/hbase</value>
     </property>
     <property>
         <name>hbase.zookeeper.quorum</name>

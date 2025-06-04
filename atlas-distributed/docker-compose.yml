@@ -45,25 +45,25 @@ services:
     ports:
       - "8983:8983"
 
-#  atlas-hadoop:
-#    image: infravibe/atlas-hadoop:2.4.0-hadoop-3.3.6
-#    platform: linux/amd64
-#    container_name: atlas-hadoop
-#    stdin_open: true
-#    tty: true
-#    networks:
-#      - apache
-#    ports:
-#      - "9000:9000"
-#      - "8088:8088"
-#    healthcheck:
-#      test: "hdfs dfs -ls /"
-#      interval: 1m30s
-#      timeout: 10s
-#      retries: 30
-#      start_period: 40s
-#    environment:
-#      - HADOOP_VERSION="3.3.6"
+  atlas-hadoop:
+    image: infravibe/atlas-hadoop:2.4.0-hadoop-3.3.6
+    platform: linux/amd64
+    container_name: atlas-hadoop
+    stdin_open: true
+    tty: true
+    networks:
+      - apache
+    ports:
+      - "9000:9000"
+      - "8089:8088"
+    healthcheck:
+      test: "hdfs dfs -ls /"
+      interval: 1m30s
+      timeout: 10s
+      retries: 30
+      start_period: 40s
+    environment:
+      - HADOOP_VERSION="3.3.6"
 
   atlas-hbase:
     image: infravibe/atlas-hbase:2.4.0-hbase-2.5.0
@@ -73,7 +73,7 @@ services:
     tty: true
     volumes:
       - ./conf/hbase/hbase-site.xml:/opt/hbase/conf/hbase-site.xml
-#      - ./log:/opt/hbase/logs
+      - ./log:/opt/hbase/logs
     networks:
       - apache
     ports:
@@ -82,8 +82,8 @@ services:
       - "16020:16020"
       - "16030:16030"
     depends_on:
-#      atlas-hadoop:
-#        condition: service_healthy
+      atlas-hadoop:
+        condition: service_healthy
 #      atlas-zk:
 #        condition: service_started
       atlas-kafka:
