@@ -73,6 +73,7 @@ services:
     tty: true
     volumes:
       - ./conf/hbase/hbase-site.xml:/opt/hbase/conf/hbase-site.xml
+      - ./log:/opt/hbase/logs
     networks:
       - apache
     ports:
