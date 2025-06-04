@@ -26,8 +26,8 @@
     </property>
 
     <!-- Override the address DataNodes will use for WebHDFS redirect responses -->
-    <property>
-        <name>dfs.datanode.hostname</name>
-        <value>localhost</value> <!-- or your host IP if not localhost -->
-    </property>
+<!--    <property>-->
+<!--        <name>dfs.datanode.hostname</name>-->
+<!--        <value>localhost</value> &lt;!&ndash; or your host IP if not localhost &ndash;&gt;-->
+<!--    </property>-->
 </configuration>
