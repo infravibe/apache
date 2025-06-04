@@ -15,6 +15,10 @@
         <value>atlas-zk</value>
     </property>
     <property>
+        <name>hbase.zookeeper.property.clientPort</name>
+        <value>2181</value>
+    </property>
+    <property>
         <name>hbase.coprocessor.master.classes</name>
         <value>org.apache.atlas.hbase.hook.HBaseAtlasCoprocessor</value>
     </property>
