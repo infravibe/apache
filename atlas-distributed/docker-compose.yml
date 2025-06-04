@@ -27,14 +27,14 @@ services:
     command:
       - /home/atlas/scripts/atlas.sh
 
-#  atlas-zk:
-#    image: infravibe/atlas-zk:2.4.0
-#    platform: linux/amd64
-#    container_name: atlas-zk
-#    networks:
-#      - apache
-#    ports:
-#      - "2181:2181"
+  atlas-zk:
+    image: infravibe/atlas-zk:2.4.0
+    platform: linux/amd64
+    container_name: atlas-zk
+    networks:
+      - apache
+    ports:
+      - "2181:2181"
 
   atlas-solr:
     image: infravibe/atlas-solr:2.4.0
