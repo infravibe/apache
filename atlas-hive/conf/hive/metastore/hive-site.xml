@@ -91,4 +91,15 @@
         <value>false</value>
     </property>
 
+<!--    Atlas Hook-->
+    <property>
+        <name>hive.exec.post.hooks</name>
+        <value>org.apache.atlas.hive.hook.HiveHook</value>
+    </property>
+
+    <property>
+        <name>hive.metastore.event.listeners</name>
+        <value>org.apache.atlas.hive.hook.HiveMetastoreHook</value>
+    </property>
+
 </configuration>

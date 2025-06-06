@@ -1,1 +1,32 @@
 https://github.com/apache/hive/blob/master/packaging/src/docker/README.md
+
+
+hdfs dfs -mkdir /hbase
+hdfs dfs -chown hbase:hbase /hbase
+
+
+hdfs dfs -ls /
+
+
+docker exec -it namenode /bin/sh
+
+
+beeline -u jdbc:hive2://localhost:10000
+
+CREATE TABLE test_table (
+  id INT,
+  name STRING
+)
+STORED AS TEXTFILE;
+
+INSERT INTO test_table VALUES (1, 'Alice'), (2, 'Bob');
+
+
+SELECT * FROM test_table;
+
+
+Hive
+Postgres: http://13.126.6.218:5432
+Metastore: http://13.126.6.218:9083
+Hiveserver2: http://13.126.6.218:10000
+Hiveserver2 UI: http://13.126.6.218:10002

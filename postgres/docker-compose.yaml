@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    container_name: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_DB: 'postgres'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-db:/var/lib/postgresql
+      - ./initdb:/docker-entrypoint-initdb.d   # Mount custom SQL scripts
+    networks:
+      - apache
+
+volumes:
+  postgres-db:
+
+networks:
+  apache:
+    external: true
+    name: apache

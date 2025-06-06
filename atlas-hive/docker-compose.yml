@@ -1,26 +1,8 @@
 
 services:
-  postgres:
-    image: postgres
-    restart: unless-stopped
-    container_name: postgres
-    hostname: postgres
-    environment:
-      POSTGRES_DB: 'metastore_db'
-      POSTGRES_USER: 'hive'
-      POSTGRES_PASSWORD: 'password'
-    ports:
-      - '5432:5432'
-    volumes:
-      - hive-db:/var/lib/postgresql
-    networks:
-      - apache
-
   metastore:
     image: infravibe/atlas-hive:4.0.1
     platform: linux/amd64
-    depends_on:
-      - postgres
     restart: unless-stopped
     container_name: metastore
     hostname: metastore
@@ -63,9 +45,6 @@ services:
       - '10002:10002'
     networks:
       - apache
-
-volumes:
-  hive-db:
 
 networks:
   apache:
