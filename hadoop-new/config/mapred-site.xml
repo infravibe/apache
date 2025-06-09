@@ -1,285 +1,29 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
-    <!-- MapReduce framework -->
     <property>
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
-        <description>Execution framework for MapReduce jobs</description>
     </property>
-
-    <!-- JobHistory Server configuration -->
     <property>
         <name>mapreduce.jobhistory.address</name>
         <value>historyserver:10020</value>
-        <description>JobHistory server RPC address</description>
     </property>
     <property>
         <name>mapreduce.jobhistory.webapp.address</name>
         <value>historyserver:19888</value>
-        <description>JobHistory server web interface address</description>
-    </property>
-    <property>
-        <name>mapreduce.jobhistory.intermediate-done-dir</name>
-        <value>/tmp/hadoop-yarn/staging/history/done_intermediate</value>
-        <description>Intermediate done directory for job history</description>
-    </property>
-    <property>
-        <name>mapreduce.jobhistory.done-dir</name>
-        <value>/tmp/hadoop-yarn/staging/history/done</value>
-        <description>Done directory for completed job history</description>
-    </property>
-    <property>
-        <name>mapreduce.jobhistory.recovery.enable</name>
-        <value>true</value>
-        <description>Enable JobHistory recovery</description>
-    </property>
-    <property>
-        <name>mapreduce.jobhistory.recovery.store.class</name>
-        <value>org.apache.hadoop.mapreduce.v2.hs.HistoryServerFileSystemStateStoreService</value>
-        <description>JobHistory recovery store implementation</description>
     </property>
 
-    <!-- Environment variables -->
     <property>
         <name>yarn.app.mapreduce.am.env</name>
         <value>HADOOP_MAPRED_HOME=/opt/hadoop</value>
-        <description>Environment variables for MapReduce Application Master</description>
     </property>
     <property>
         <name>mapreduce.map.env</name>
         <value>HADOOP_MAPRED_HOME=/opt/hadoop</value>
-        <description>Environment variables for Map tasks</description>
     </property>
     <property>
         <name>mapreduce.reduce.env</name>
         <value>HADOOP_MAPRED_HOME=/opt/hadoop</value>
-        <description>Environment variables for Reduce tasks</description>
-    </property>
-
-    <!-- Memory and CPU configuration for tasks -->
-    <property>
-        <name>mapreduce.map.memory.mb</name>
-        <value>1024</value>
-        <description>Memory allocation for Map tasks in MB</description>
-    </property>
-    <property>
-        <name>mapreduce.reduce.memory.mb</name>
-        <value>2048</value>
-        <description>Memory allocation for Reduce tasks in MB</description>
-    </property>
-    <property>
-        <name>mapreduce.map.cpu.vcores</name>
-        <value>1</value>
-        <description>CPU cores for Map tasks</description>
-    </property>
-    <property>
-        <name>mapreduce.reduce.cpu.vcores</name>
-        <value>2</value>
-        <description>CPU cores for Reduce tasks</description>
-    </property>
-
-    <!-- JVM heap size configuration -->
-    <property>
-        <name>mapreduce.map.java.opts</name>
-        <value>-Xmx768m -XX:+UseG1GC -XX:+UseCompressedOops</value>
-        <description>JVM options for Map tasks</description>
-    </property>
-    <property>
-        <name>mapreduce.reduce.java.opts</name>
-        <value>-Xmx1536m -XX:+UseG1GC -XX:+UseCompressedOops</value>
-        <description>JVM options for Reduce tasks</description>
-    </property>
-
-    <!-- Application Master configuration -->
-    <property>
-        <name>yarn.app.mapreduce.am.resource.mb</name>
-        <value>1024</value>
-        <description>Memory for MapReduce Application Master</description>
-    </property>
-    <property>
-        <name>yarn.app.mapreduce.am.resource.cpu-vcores</name>
-        <value>1</value>
-        <description>CPU cores for MapReduce Application Master</description>
-    </property>
-    <property>
-        <name>yarn.app.mapreduce.am.command-opts</name>
-        <value>-Xmx768m -XX:+UseG1GC</value>
-        <description>JVM options for MapReduce Application Master</description>
-    </property>
-
-    <!-- Shuffle and sort configuration -->
-    <property>
-        <name>mapreduce.task.io.sort.mb</name>
-        <value>256</value>
-        <description>Memory for sorting during map phase</description>
-    </property>
-    <property>
-        <name>mapreduce.task.io.sort.factor</name>
-        <value>100</value>
-        <description>Number of streams to merge during sorting</description>
-    </property>
-    <property>
-        <name>mapreduce.reduce.shuffle.parallelcopies</name>
-        <value>10</value>
-        <description>Number of parallel copies during shuffle phase</description>
-    </property>
-    <property>
-        <name>mapreduce.reduce.shuffle.memory.limit.percent</name>
-        <value>0.25</value>
-        <description>Percentage of heap memory for shuffle buffer</description>
-    </property>
-    <property>
-        <name>mapreduce.reduce.shuffle.merge.percent</name>
-        <value>0.66</value>
-        <description>Threshold for starting merge during shuffle</description>
-    </property>
-    <property>
-        <name>mapreduce.reduce.input.buffer.percent</name>
-        <value>0.0</value>
-        <description>Percentage of heap memory for reduce input buffer</description>
-    </property>
-
-    <!-- Compression configuration -->
-    <property>
-        <name>mapreduce.map.output.compress</name>
-        <value>true</value>
-        <description>Enable compression for map output</description>
-    </property>
-    <property>
-        <name>mapreduce.map.output.compress.codec</name>
-        <value>org.apache.hadoop.io.compress.SnappyCodec</value>
-        <description>Compression codec for map output</description>
-    </property>
-    <property>
-        <name>mapreduce.output.fileoutputformat.compress</name>
-        <value>true</value>
-        <description>Enable compression for job output</description>
-    </property>
-    <property>
-        <name>mapreduce.output.fileoutputformat.compress.codec</name>
-        <value>org.apache.hadoop.io.compress.GzipCodec</value>
-        <description>Compression codec for job output</description>
-    </property>
-
-    <!-- Speculative execution -->
-    <property>
-        <name>mapreduce.map.speculative</name>
-        <value>false</value>
-        <description>Enable speculative execution for map tasks</description>
-    </property>
-    <property>
-        <name>mapreduce.reduce.speculative</name>
-        <value>false</value>
-        <description>Enable speculative execution for reduce tasks</description>
-    </property>
-
-    <!-- Task timeout and retry configuration -->
-    <property>
-        <name>mapreduce.task.timeout</name>
-        <value>1800000</value>
-        <description>Task timeout in milliseconds (30 minutes)</description>
-    </property>
-    <property>
-        <name>mapreduce.map.maxattempts</name>
-        <value>3</value>
-        <description>Maximum attempts for map tasks</description>
-    </property>
-    <property>
-        <name>mapreduce.reduce.maxattempts</name>
-        <value>3</value>
-        <description>Maximum attempts for reduce tasks</description>
-    </property>
-
-    <!-- Job submission and client configuration -->
-    <property>
-        <name>mapreduce.client.submit.file.replication</name>
-        <value>3</value>
-        <description>Replication factor for job files</description>
-    </property>
-    <property>
-        <name>mapreduce.client.completion.pollinterval</name>
-        <value>5000</value>
-        <description>Job completion polling interval in milliseconds</description>
-    </property>
-
-    <!-- Uber mode configuration (for small jobs) -->
-    <property>
-        <name>mapreduce.job.ubertask.enable</name>
-        <value>true</value>
-        <description>Enable uber mode for small jobs</description>
-    </property>
-    <property>
-        <name>mapreduce.job.ubertask.maxmaps</name>
-        <value>9</value>
-        <description>Maximum maps for uber mode</description>
-    </property>
-    <property>
-        <name>mapreduce.job.ubertask.maxreduces</name>
-        <value>1</value>
-        <description>Maximum reduces for uber mode</description>
-    </property>
-    <property>
-        <name>mapreduce.job.ubertask.maxbytes</name>
-        <value>67108864</value>
-        <description>Maximum input size for uber mode (64MB)</description>
-    </property>
-
-    <!-- Security configuration (if security is enabled) -->
-    <property>
-        <name>mapreduce.jobhistory.keytab</name>
-        <value>/etc/security/keytabs/jhs.service.keytab</value>
-        <description>Keytab for JobHistory Server (if Kerberos is enabled)</description>
-    </property>
-    <property>
-        <name>mapreduce.jobhistory.principal</name>
-        <value>jhs/_HOST@REALM.COM</value>
-        <description>Principal for JobHistory Server (if Kerberos is enabled)</description>
-    </property>
-
-    <!-- Logging and monitoring -->
-    <property>
-        <name>mapreduce.job.counters.max</name>
-        <value>120</value>
-        <description>Maximum number of counters per job</description>
-    </property>
-    <property>
-        <name>mapreduce.job.reduce.slowstart.completedmaps</name>
-        <value>0.8</value>
-        <description>Fraction of map tasks that must complete before reduce tasks start</description>
-    </property>
-
-    <!-- File system configuration -->
-    <property>
-        <name>mapreduce.jobhistory.cleaner.enable</name>
-        <value>true</value>
-        <description>Enable automatic cleanup of old job history files</description>
-    </property>
-    <property>
-        <name>mapreduce.jobhistory.max-age-ms</name>
-        <value>604800000</value>
-        <description>Maximum age of job history files in milliseconds (7 days)</description>
-    </property>
-    <property>
-        <name>mapreduce.jobhistory.cleaner.interval-ms</name>
-        <value>86400000</value>
-        <description>Interval for job history cleanup in milliseconds (1 day)</description>
-    </property>
-
-    <!-- Additional performance tuning for Docker/EC2 -->
-    <property>
-        <name>mapreduce.cluster.local.dir</name>
-        <value>/tmp/hadoop-mapreduce</value>
-        <description>Local directory for MapReduce temporary files</description>
-    </property>
-    <property>
-        <name>mapreduce.job.maps</name>
-        <value>2</value>
-        <description>Default number of map tasks per job</description>
-    </property>
-    <property>
-        <name>mapreduce.job.reduces</name>
-        <value>1</value>
-        <description>Default number of reduce tasks per job</description>
     </property>
 </configuration>

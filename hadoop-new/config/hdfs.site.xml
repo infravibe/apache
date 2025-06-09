@@ -1,166 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
-    <!-- Replication factor -->
+    <!-- Set replication factor to 2 for HA -->
     <property>
         <n>dfs.replication</n>
         <value>2</value>
-        <description>Default block replication factor</description>
     </property>
 
     <!-- NameNode configuration -->
     <property>
         <n>dfs.namenode.rpc-address</n>
         <value>namenode:9820</value>
-        <description>NameNode RPC address</description>
     </property>
 
     <property>
         <n>dfs.namenode.http-address</n>
         <value>namenode:9870</value>
-        <description>NameNode HTTP address</description>
     </property>
 
     <property>
         <n>dfs.namenode.name.dir</n>
         <value>file:///hadoop/dfs/name</value>
-        <description>NameNode directory for namespace and transaction logs</description>
-    </property>
-
-    <property>
-        <n>dfs.namenode.checkpoint.dir</n>
-        <value>file:///hadoop/dfs/namesecondary</value>
-        <description>Secondary NameNode checkpoint directory</description>
     </property>
 
     <!-- DataNode configuration -->
     <property>
         <n>dfs.datanode.data.dir</n>
         <value>file:///hadoop/dfs/data</value>
-        <description>DataNode data directories</description>
-    </property>
-
-    <property>
-        <n>dfs.datanode.address</n>
-        <value>0.0.0.0:9866</value>
-        <description>DataNode address for data transfer</description>
     </property>
 
     <property>
         <n>dfs.datanode.http.address</n>
         <value>0.0.0.0:9864</value>
-        <description>DataNode HTTP address</description>
+    </property>
+
+    <property>
+        <n>dfs.datanode.address</n>
+        <value>0.0.0.0:9866</value>
     </property>
 
     <property>
         <n>dfs.datanode.ipc.address</n>
         <value>0.0.0.0:9867</value>
-        <description>DataNode IPC address</description>
     </property>
 
-    <!-- WebHDFS configuration -->
+    <!-- Enable WebHDFS for REST API access -->
     <property>
         <n>dfs.webhdfs.enabled</n>
         <value>true</value>
-        <description>Enable WebHDFS REST API</description>
     </property>
 
-    <!-- DataNode hostname resolution -->
+    <!-- DataNode hostname configuration for external access -->
     <property>
         <n>dfs.datanode.use.datanode.hostname</n>
-        <value>true</value>
-        <description>Use DataNode hostname instead of IP for client connections</description>
-    </property>
-
-    <property>
-        <n>dfs.client.use.datanode.hostname</n>
-        <value>true</value>
-        <description>Clients should use DataNode hostname</description>
-    </property>
-
-    <!-- Block settings -->
-    <property>
-        <n>dfs.blocksize</n>
-        <value>134217728</value>
-        <description>Default block size (128MB)</description>
-    </property>
-
-    <property>
-        <n>dfs.block.access.token.enable</n>
         <value>false</value>
-        <description>Enable block access tokens for security</description>
     </property>
 
-    <!-- Performance settings -->
-    <property>
-        <n>dfs.datanode.handler.count</n>
-        <value>10</value>
-        <description>Number of DataNode server threads</description>
-    </property>
-
-    <property>
-        <n>dfs.namenode.handler.count</n>
-        <value>10</value>
-        <description>Number of NameNode server threads</description>
-    </property>
-
-    <!-- Heartbeat settings -->
-    <property>
-        <n>dfs.heartbeat.interval</n>
-        <value>3</value>
-        <description>DataNode heartbeat interval in seconds</description>
-    </property>
-
-    <property>
-        <n>dfs.namenode.heartbeat.recheck-interval</n>
-        <value>300000</value>
-        <description>Time between heartbeat checks in milliseconds</description>
-    </property>
-
-    <!-- Safe mode settings -->
-    <property>
-        <n>dfs.namenode.safemode.threshold-pct</n>
-        <value>0.99f</value>
-        <description>Percentage of blocks that must be safe before leaving safe mode</description>
-    </property>
-
-    <property>
-        <n>dfs.namenode.safemode.min.datanodes</n>
-        <value>1</value>
-        <description>Minimum number of DataNodes before leaving safe mode</description>
-    </property>
-
-    <!-- Permission settings -->
+    <!-- Enable file permissions (set to false for development ease) -->
     <property>
         <n>dfs.permissions.enabled</n>
         <value>false</value>
-        <description>Enable HDFS permissions (set to true for production)</description>
     </property>
 
+    <!-- Set block size (128MB default) -->
     <property>
-        <n>dfs.permissions.superusergroup</n>
-        <value>hadoop</value>
-        <description>Super user group</description>
+        <n>dfs.blocksize</n>
+        <value>134217728</value>
     </property>
 
-    <!-- Storage settings -->
+    <!-- Minimum number of replicas for write -->
     <property>
-        <n>dfs.datanode.du.reserved</n>
-        <value>1073741824</value>
-        <description>Reserved space for non-HDFS usage (1GB)</description>
+        <n>dfs.namenode.replication.min</n>
+        <value>1</value>
     </property>
 
-    <!-- Client settings -->
+    <!-- Maximum number of replicas -->
     <property>
-        <n>dfs.client.read.shortcircuit</n>
-        <value>false</value>
-        <description>Enable short-circuit reads (requires native libraries)</description>
+        <n>dfs.replication.max</n>
+        <value>3</value>
     </property>
 
-    <!-- Balancer settings -->
+    <!-- Safe mode configuration -->
     <property>
-        <n>dfs.datanode.balance.bandwidthPerSec</n>
-        <value>10485760</value>
-        <description>Bandwidth used by balancer (10MB/s)</description>
+        <n>dfs.safemode.threshold.pct</n>
+        <value>0.999f</value>
+    </property>
+
+    <!-- DataNode heartbeat interval -->
+    <property>
+        <n>dfs.heartbeat.interval</n>
+        <value>3</value>
+    </property>
+
+    <!-- Enable trash -->
+    <property>
+        <n>fs.trash.interval</n>
+        <value>1440</value>
+    </property>
+
+    <!-- WebHDFS REST API -->
+    <property>
+        <n>dfs.namenode.http-bind-host</n>
+        <value>0.0.0.0</value>
+    </property>
+
+    <!-- Secondary NameNode configuration -->
+    <property>
+        <n>dfs.namenode.secondary.http-address</n>
+        <value>namenode:9868</value>
     </property>
 </configuration>

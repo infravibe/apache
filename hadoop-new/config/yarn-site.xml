@@ -4,229 +4,102 @@
     <property>
         <n>yarn.resourcemanager.hostname</n>
         <value>resourcemanager</value>
-        <description>ResourceManager hostname</description>
     </property>
 
     <property>
         <n>yarn.resourcemanager.address</n>
         <value>resourcemanager:8032</value>
-        <description>ResourceManager client interface</description>
     </property>
 
     <property>
         <n>yarn.resourcemanager.scheduler.address</n>
         <value>resourcemanager:8030</value>
-        <description>ResourceManager scheduler interface</description>
     </property>
 
     <property>
         <n>yarn.resourcemanager.resource-tracker.address</n>
         <value>resourcemanager:8031</value>
-        <description>ResourceManager resource tracker interface</description>
     </property>
 
     <property>
         <n>yarn.resourcemanager.admin.address</n>
         <value>resourcemanager:8033</value>
-        <description>ResourceManager admin interface</description>
     </property>
 
     <property>
         <n>yarn.resourcemanager.webapp.address</n>
         <value>resourcemanager:8088</value>
-        <description>ResourceManager web interface</description>
     </property>
 
     <!-- NodeManager configuration -->
     <property>
         <n>yarn.nodemanager.aux-services</n>
         <value>mapreduce_shuffle</value>
-        <description>Auxiliary services for NodeManager</description>
-    </property>
-
-    <property>
-        <n>yarn.nodemanager.aux-services.mapreduce_shuffle.class</n>
-        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-        <description>MapReduce shuffle service class</description>
-    </property>
-
-    <property>
-        <n>yarn.nodemanager.local-dirs</n>
-        <value>/tmp/hadoop-root/nm-local-dir</value>
-        <description>Local directories for NodeManager</description>
-    </property>
-
-    <property>
-        <n>yarn.nodemanager.log-dirs</n>
-        <value>/opt/hadoop/logs/userlogs</value>
-        <description>Log directories for NodeManager</description>
     </property>
 
     <property>
         <n>yarn.nodemanager.webapp.address</n>
         <value>0.0.0.0:8042</value>
-        <description>NodeManager web interface address</description>
     </property>
 
     <!-- Resource allocation -->
     <property>
         <n>yarn.nodemanager.resource.memory-mb</n>
-        <value>4096</value>
-        <description>Physical memory in MB for containers</description>
+        <value>2048</value>
     </property>
 
     <property>
         <n>yarn.scheduler.maximum-allocation-mb</n>
-        <value>4096</value>
-        <description>Maximum memory allocation for containers</description>
+        <value>2048</value>
     </property>
 
     <property>
         <n>yarn.scheduler.minimum-allocation-mb</n>
         <value>128</value>
-        <description>Minimum memory allocation for containers</description>
     </property>
 
     <property>
         <n>yarn.nodemanager.resource.cpu-vcores</n>
-        <value>4</value>
-        <description>Number of CPU cores for containers</description>
-    </property>
-
-    <property>
-        <n>yarn.scheduler.maximum-allocation-vcores</n>
-        <value>4</value>
-        <description>Maximum CPU cores allocation for containers</description>
-    </property>
-
-    <property>
-        <n>yarn.scheduler.minimum-allocation-vcores</n>
-        <value>1</value>
-        <description>Minimum CPU cores allocation for containers</description>
+        <value>2</value>
     </property>
 
     <!-- Application Master -->
     <property>
         <n>yarn.app.mapreduce.am.resource.mb</n>
         <value>512</value>
-        <description>Memory for MapReduce Application Master</description>
-    </property>
-
-    <property>
-        <n>yarn.app.mapreduce.am.resource.cpu-vcores</n>
-        <value>1</value>
-        <description>CPU cores for MapReduce Application Master</description>
-    </property>
-
-    <!-- Scheduler configuration -->
-    <property>
-        <n>yarn.resourcemanager.scheduler.class</n>
-        <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
-        <description>Scheduler class</description>
-    </property>
-
-    <!-- Node health checking -->
-    <property>
-        <n>yarn.nodemanager.health-checker.interval-ms</n>
-        <value>600000</value>
-        <description>Health check interval in milliseconds</description>
-    </property>
-
-    <property>
-        <n>yarn.nodemanager.health-checker.script.timeout-ms</n>
-        <value>60000</value>
-        <description>Health check script timeout</description>
     </property>
 
     <!-- Log aggregation -->
     <property>
         <n>yarn.log-aggregation-enable</n>
         <value>true</value>
-        <description>Enable log aggregation</description>
     </property>
 
     <property>
         <n>yarn.log-aggregation.retain-seconds</n>
         <value>86400</value>
-        <description>Log retention time in seconds (24 hours)</description>
     </property>
 
+    <!-- Cross-origin for web UI -->
     <property>
-        <n>yarn.log-aggregation.retain-check-interval-seconds</n>
-        <value>3600</value>
-        <description>Log retention check interval (1 hour)</description>
+        <n>yarn.resourcemanager.webapp.cross-origin.enabled</n>
+        <value>true</value>
     </property>
 
-    <!-- Container settings -->
-    <property>
-        <n>yarn.nodemanager.container-executor.class</n>
-        <value>org.apache.hadoop.yarn.server.nodemanager.DefaultContainerExecutor</value>
-        <description>Container executor class</description>
-    </property>
-
-    <property>
-        <n>yarn.nodemanager.delete.debug-delay-sec</n>
-        <value>600</value>
-        <description>Delay before deleting container directories</description>
-    </property>
-
-    <!-- Timeline service (optional) -->
+    <!-- Timeline service -->
     <property>
         <n>yarn.timeline-service.enabled</n>
         <value>false</value>
-        <description>Enable timeline service</description>
     </property>
 
-    <!-- Recovery settings -->
+    <!-- NodeManager local directories -->
     <property>
-        <n>yarn.resourcemanager.recovery.enabled</n>
-        <value>false</value>
-        <description>Enable ResourceManager recovery</description>
-    </property>
-
-    <!-- Security settings -->
-    <property>
-        <n>yarn.acl.enable</n>
-        <value>false</value>
-        <description>Enable YARN ACLs</description>
-    </property>
-
-    <!-- Performance tuning -->
-    <property>
-        <n>yarn.resourcemanager.client.thread-count</n>
-        <value>50</value>
-        <description>Number of ResourceManager client threads</description>
+        <n>yarn.nodemanager.local-dirs</n>
+        <value>/tmp/hadoop-yarn/nm-local-dir</value>
     </property>
 
     <property>
-        <n>yarn.resourcemanager.scheduler.client.thread-count</n>
-        <value>50</value>
-        <description>Number of ResourceManager scheduler threads</description>
-    </property>
-
-    <property>
-        <n>yarn.resourcemanager.admin.client.thread-count</n>
-        <value>10</value>
-        <description>Number of ResourceManager admin threads</description>
-    </property>
-
-    <!-- Heartbeat settings -->
-    <property>
-        <n>yarn.resourcemanager.nodemanagers.heartbeat-interval-ms</n>
-        <value>1000</value>
-        <description>NodeManager heartbeat interval</description>
-    </property>
-
-    <!-- Container monitoring -->
-    <property>
-        <n>yarn.nodemanager.container-monitor.interval-ms</n>
-        <value>3000</value>
-        <description>Container monitoring interval</description>
-    </property>
-
-    <property>
-        <n>yarn.nodemanager.process-kill-wait.ms</n>
-        <value>5000</value>
-        <description>Wait time before killing processes</description>
+        <n>yarn.nodemanager.log-dirs</n>
+        <value>/tmp/hadoop-yarn/containers</value>
     </property>
 </configuration>
