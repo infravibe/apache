@@ -3,7 +3,7 @@
 <configuration>
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://namenode:9820</value>
+        <value>hdfs://13.126.6.218:9820</value>
     </property>
     <property>
         <name>hadoop.proxyuser.hive.hosts</name>
