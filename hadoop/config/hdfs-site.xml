@@ -5,6 +5,11 @@
         <name>dfs.replication</name>
         <value>1</value>
     </property>
+
+    <property>
+        <name>dfs.namenode.rpc-address</name>
+        <value>0.0.0.0:9820</value>
+    </property>
     <property>
         <name>dfs.namenode.name.dir</name>
         <value>file:///hadoop/dfs/name</value>
@@ -22,12 +27,13 @@
     <!-- This tells DataNodes what address to return in redirects -->
     <property>
         <name>dfs.datanode.use.datanode.hostname</name>
-        <value>true</value>
+        <value>false</value>
     </property>
 
     <!-- Override the address DataNodes will use for WebHDFS redirect responses -->
-    <property>
-        <name>dfs.datanode.hostname</name>
-        <value>13.126.6.218</value> <!-- or your host IP if not localhost -->
-    </property>
+<!--    <property>-->
+<!--        <name>dfs.datanode.hostname</name>-->
+<!--        <value>13.126.6.218</value> &lt;!&ndash; or your host IP if not localhost &ndash;&gt;-->
+<!--    </property>-->
+
 </configuration>
