@@ -1,0 +1,254 @@
+version: '3.8'
+
+services:
+  namenode:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: namenode
+    container_name: namenode
+    privileged: true
+    command: >
+      bash -c "
+        if [ ! -d /hadoop/dfs/name/current ]; then
+          echo 'Formatting NameNode...';
+          hdfs namenode -format -force -nonInteractive;
+        fi;
+        hdfs namenode
+      "
+    environment:
+      - HDFS_NAMENODE_USER=root
+      - JAVA_HOME=/opt/java/openjdk
+      - HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+      - HADOOP_LOG_DIR=/opt/hadoop/logs
+    user: root
+    volumes:
+      - ./config:/opt/hadoop/etc/hadoop
+      - namenode_data:/hadoop/dfs/name
+      - hadoop_logs:/opt/hadoop/logs
+    ports:
+      - "9870:9870"  # NameNode Web UI
+      - "9820:9820"  # NameNode RPC
+      - "9000:9000"  # Alternative NameNode port
+    networks:
+      - hadoop_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9870/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  datanode1:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: datanode1
+    container_name: datanode1
+    user: root
+    command: ["hdfs", "datanode"]
+    environment:
+      - JAVA_HOME=/opt/java/openjdk
+      - HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+      - HADOOP_LOG_DIR=/opt/hadoop/logs
+    volumes:
+      - ./config:/opt/hadoop/etc/hadoop
+      - datanode1_data:/hadoop/dfs/data
+      - hadoop_logs:/opt/hadoop/logs
+    ports:
+      - "9864:9864"  # DataNode Web UI
+      - "9866:9866"  # DataNode data transfer
+      - "9867:9867"  # DataNode IPC
+    depends_on:
+      namenode:
+        condition: service_healthy
+    networks:
+      - hadoop_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9864/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  datanode2:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: datanode2
+    container_name: datanode2
+    user: root
+    command: ["hdfs", "datanode"]
+    environment:
+      - JAVA_HOME=/opt/java/openjdk
+      - HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+      - HADOOP_LOG_DIR=/opt/hadoop/logs
+    volumes:
+      - ./config:/opt/hadoop/etc/hadoop
+      - datanode2_data:/hadoop/dfs/data
+      - hadoop_logs:/opt/hadoop/logs
+    ports:
+      - "9865:9864"  # DataNode Web UI
+      - "9868:9866"  # DataNode data transfer
+      - "9869:9867"  # DataNode IPC
+    depends_on:
+      namenode:
+        condition: service_healthy
+    networks:
+      - hadoop_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9864/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  resourcemanager:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: resourcemanager
+    container_name: resourcemanager
+    user: root
+    command: ["yarn", "resourcemanager"]
+    environment:
+      - JAVA_HOME=/opt/java/openjdk
+      - HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+      - HADOOP_LOG_DIR=/opt/hadoop/logs
+    volumes:
+      - ./config:/opt/hadoop/etc/hadoop
+      - hadoop_logs:/opt/hadoop/logs
+    ports:
+      - "8088:8088"  # ResourceManager Web UI
+      - "8030:8030"  # ResourceManager Scheduler
+      - "8031:8031"  # ResourceManager Resource Tracker
+      - "8032:8032"  # ResourceManager Admin
+      - "8033:8033"  # ResourceManager Client
+    depends_on:
+      namenode:
+        condition: service_healthy
+      datanode1:
+        condition: service_healthy
+      datanode2:
+        condition: service_healthy
+    networks:
+      - hadoop_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nodemanager1:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: nodemanager1
+    container_name: nodemanager1
+    user: root
+    command: ["yarn", "nodemanager"]
+    environment:
+      - JAVA_HOME=/opt/java/openjdk
+      - HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+      - HADOOP_LOG_DIR=/opt/hadoop/logs
+    volumes:
+      - ./config:/opt/hadoop/etc/hadoop
+      - hadoop_logs:/opt/hadoop/logs
+      - nodemanager1_local:/tmp/hadoop-root/nm-local-dir
+    ports:
+      - "8042:8042"  # NodeManager Web UI
+    depends_on:
+      resourcemanager:
+        condition: service_healthy
+    networks:
+      - hadoop_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8042/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nodemanager2:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: nodemanager2
+    container_name: nodemanager2
+    user: root
+    command: ["yarn", "nodemanager"]
+    environment:
+      - JAVA_HOME=/opt/java/openjdk
+      - HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+      - HADOOP_LOG_DIR=/opt/hadoop/logs
+    volumes:
+      - ./config:/opt/hadoop/etc/hadoop
+      - hadoop_logs:/opt/hadoop/logs
+      - nodemanager2_local:/tmp/hadoop-root/nm-local-dir
+    ports:
+      - "8043:8042"  # NodeManager Web UI
+    depends_on:
+      resourcemanager:
+        condition: service_healthy
+    networks:
+      - hadoop_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8042/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  historyserver:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: historyserver
+    container_name: historyserver
+    user: root
+    command: >
+      bash -c "
+        hdfs dfs -mkdir -p /tmp/hadoop-yarn/staging/history/done_intermediate;
+        hdfs dfs -mkdir -p /tmp/hadoop-yarn/staging/history/done;
+        hdfs dfs -chmod -R 777 /tmp/hadoop-yarn;
+        mapred historyserver
+      "
+    environment:
+      - JAVA_HOME=/opt/java/openjdk
+      - HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+      - HADOOP_LOG_DIR=/opt/hadoop/logs
+    volumes:
+      - ./config:/opt/hadoop/etc/hadoop
+      - hadoop_logs:/opt/hadoop/logs
+    ports:
+      - "8188:8188"  # History Server Web UI
+      - "19888:19888" # MapReduce JobHistory Web UI
+      - "10020:10020" # JobHistory Server
+    depends_on:
+      namenode:
+        condition: service_healthy
+      resourcemanager:
+        condition: service_healthy
+    networks:
+      - hadoop_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:19888/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  namenode_data:
+    driver: local
+  datanode1_data:
+    driver: local
+  datanode2_data:
+    driver: local
+  nodemanager1_local:
+    driver: local
+  nodemanager2_local:
+    driver: local
+  hadoop_logs:
+    driver: local
+
+networks:
+  hadoop_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

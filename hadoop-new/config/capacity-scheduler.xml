@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Root queue configuration -->
+    <property>
+        <n>yarn.scheduler.capacity.root.queues</n>
+        <value>default,production,development</value>
+        <description>Root level queues</description>
+    </property>
+
+    <!-- Default queue configuration -->
+    <property>
+        <n>yarn.scheduler.capacity.root.default.capacity</n>
+        <value>40</value>
+        <description>Default queue capacity percentage</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.default.maximum-capacity</n>
+        <value>60</value>
+        <description>Default queue maximum capacity</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.default.user-limit-factor</n>
+        <value>2</value>
+        <description>User limit factor for default queue</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.default.state</n>
+        <value>RUNNING</value>
+        <description>Default queue state</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.default.acl_submit_applications</n>
+        <value>*</value>
+        <description>Default queue submit ACL</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.default.acl_administer_queue</n>
+        <value>*</value>
+        <description>Default queue admin ACL</description>
+    </property>
+
+    <!-- Production queue configuration -->
+    <property>
+        <n>yarn.scheduler.capacity.root.production.capacity</n>
+        <value>40</value>
+        <description>Production queue capacity percentage</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.production.maximum-capacity</n>
+        <value>80</value>
+        <description>Production queue maximum capacity</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.production.user-limit-factor</n>
+        <value>1</value>
+        <description>User limit factor for production queue</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.production.state</n>
+        <value>RUNNING</value>
+        <description>Production queue state</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.production.acl_submit_applications</n>
+        <value>*</value>
+        <description>Production queue submit ACL</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.production.acl_administer_queue</n>
+        <value>*</value>
+        <description>Production queue admin ACL</description>
+    </property>
+
+    <!-- Development queue configuration -->
+    <property>
+        <n>yarn.scheduler.capacity.root.development.capacity</n>
+        <value>20</value>
+        <description>Development queue capacity percentage</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.development.maximum-capacity</n>
+        <value>40</value>
+        <description>Development queue maximum capacity</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.development.user-limit-factor</n>
+        <value>3</value>
+        <description>User limit factor for development queue</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.development.state</n>
+        <value>RUNNING</value>
+        <description>Development queue state</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.development.acl_submit_applications</n>
+        <value>*</value>
+        <description>Development queue submit ACL</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.root.development.acl_administer_queue</n>
+        <value>*</value>
+        <description>Development queue admin ACL</description>
+    </property>
+
+    <!-- Global scheduler settings -->
+    <property>
+        <n>yarn.scheduler.capacity.maximum-applications</n>
+        <value>10000</value>
+        <description>Maximum number of applications</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.maximum-am-resource-percent</n>
+        <value>0.3</value>
+        <description>Maximum percent of resources for Application Masters</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.resource-calculator</n>
+        <value>org.apache.hadoop.yarn.util.resource.DefaultResourceCalculator</value>
+        <description>Resource calculator class</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.node-locality-delay</n>
+        <value>40</value>
+        <description>Node locality delay</description>
+    </property>
+
+    <!-- Preemption settings -->
+    <property>
+        <n>yarn.scheduler.capacity.preemption.enabled</n>
+        <value>true</value>
+        <description>Enable preemption</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.preemption.monitoring_interval</n>
+        <value>3000</value>
+        <description>Preemption monitoring interval</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.preemption.max_wait_before_kill</n>
+        <value>15000</value>
+        <description>Maximum wait before killing containers</description>
+    </property>
+
+    <!-- Queue ordering policy -->
+    <property>
+        <n>yarn.scheduler.capacity.queue-mappings</n>
+        <value></value>
+        <description>Queue mappings for automatic queue assignment</description>
+    </property>
+
+    <property>
+        <n>yarn.scheduler.capacity.queue-mappings-override.enable</n>
+        <value>false</value>
+        <description>Override queue mappings</description>
+    </property>
+</configuration>
