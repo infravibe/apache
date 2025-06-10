@@ -8,7 +8,7 @@
 
     <property>
         <name>dfs.namenode.rpc-address</name>
-        <value>0.0.0.0:9820</value>
+        <value>namenode:9820</value>
     </property>
     <property>
         <name>dfs.namenode.name.dir</name>
@@ -27,13 +27,21 @@
     <!-- This tells DataNodes what address to return in redirects -->
     <property>
         <name>dfs.datanode.use.datanode.hostname</name>
-        <value>false</value>
+        <value>true</value>
     </property>
 
-    <!-- Override the address DataNodes will use for WebHDFS redirect responses -->
+    <property>
+        <name>dfs.client.use.datanode.hostname</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>dfs.datanode.use.datanode.hostname</name>
+        <value>true</value>
+    </property>
+
 <!--    <property>-->
 <!--        <name>dfs.datanode.hostname</name>-->
-<!--        <value>13.126.6.218</value> &lt;!&ndash; or your host IP if not localhost &ndash;&gt;-->
+<!--        <value>192.168.100.29</value> &lt;!&ndash; or IP like 172.21.0.4 &ndash;&gt;-->
 <!--    </property>-->
 
 </configuration>
