@@ -1,0 +1,189 @@
+
+services:
+  atlas:
+    image: infravibe/atlas:2.4.0
+    platform: linux/amd64
+    container_name: atlas
+    stdin_open: true
+    tty: true
+    networks:
+      - apache
+    volumes:
+      - ./data:/home/atlas/data
+    ports:
+      - "21000:21000"
+    depends_on:
+      atlas-hbase:
+        condition: service_started
+      atlas-kafka:
+        condition: service_started
+      atlas-solr:
+        condition: service_started
+      atlas-zk:
+        condition: service_started
+    environment:
+      - ATLAS_SERVER_JAVA_VERSION="11"
+      - ATLAS_VERSION="2.4.0"
+    command:
+      - /home/atlas/scripts/atlas.sh
+
+  atlas-zk:
+    image: infravibe/atlas-zk:2.4.0
+    platform: linux/amd64
+    container_name: atlas-zk
+    networks:
+      - apache
+    ports:
+      - "2181:2181"
+
+  atlas-solr:
+    image: infravibe/atlas-solr:2.4.0
+    platform: linux/amd64
+    container_name: atlas-solr
+    networks:
+      - apache
+    ports:
+      - "8983:8983"
+
+  atlas-hadoop:
+    image: infravibe/atlas-hadoop:2.4.0-hadoop-3.3.6
+    platform: linux/amd64
+    container_name: atlas-hadoop
+    stdin_open: true
+    tty: true
+    networks:
+      - apache
+    ports:
+      - "9000:9000"
+      - "8089:8088"
+    healthcheck:
+      test: "hdfs dfs -ls /"
+      interval: 1m30s
+      timeout: 10s
+      retries: 30
+      start_period: 40s
+    environment:
+      - HADOOP_VERSION="3.3.6"
+
+  atlas-hbase:
+    image: infravibe/atlas-hbase:2.4.0-hbase-2.5.0
+    platform: linux/amd64
+    container_name: atlas-hbase
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./conf/hbase/hbase-site.xml:/opt/hbase/conf/hbase-site.xml
+      - ./log:/opt/hbase/logs
+    networks:
+      - apache
+    ports:
+      - "16000:16000"
+      - "16010:16010"
+      - "16020:16020"
+      - "16030:16030"
+    depends_on:
+      atlas-hadoop:
+        condition: service_healthy
+      atlas-zk:
+        condition: service_started
+      atlas-kafka:
+        condition: service_started
+    environment:
+      - HBASE_VERSION="2.5.0"
+      - ATLAS_VERSION="2.4.0"
+
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    container_name: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_DB: 'postgres'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-db:/var/lib/postgresql
+      - ./conf/postgres/initdb:/docker-entrypoint-initdb.d   # Mount custom SQL scripts
+    networks:
+      - apache
+
+  metastore:
+    image: infravibe/atlas-hive:4.0.1
+    platform: linux/amd64
+    restart: unless-stopped
+    container_name: metastore
+    hostname: metastore
+    environment:
+      DB_DRIVER: postgres
+      SERVICE_NAME: 'metastore'
+      SERVICE_OPTS: '-Xmx1G -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver
+                     -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore_db
+                     -Djavax.jdo.option.ConnectionUserName=hive
+                     -Djavax.jdo.option.ConnectionPassword=password'
+    ports:
+      - '9083:9083'
+    volumes:
+      - ./conf/hive/metastore:/opt/hive/conf
+      - ./conf/postgres/postgresql-42.7.4.jar:/opt/hive/lib/postgresql-42.7.4.jar
+      - ./conf/aws/aws-java-sdk-bundle-1.12.262.jar:/opt/hive/lib/aws-java-sdk-bundle-1.12.262.jar
+      - ./conf/hadoop/hadoop-aws-3.3.4.jar:/opt/hive/lib/hadoop-aws-3.3.4.jar
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/hive/bin/schematool -dbType postgres -info >/dev/null 2>&1 || exit 1" ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    networks:
+      - apache
+
+  atlas-kafka:
+    image: infravibe/atlas-kafka:2.4.0-kafka-2.8.2
+    platform: linux/amd64
+    container_name: atlas-kafka
+    stdin_open: true
+    tty: true
+    networks:
+      - apache
+    ports:
+      - "9092:9092"
+    depends_on:
+      atlas-zk:
+        condition: service_started
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=atlas-zk:2181
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT, DIFFERENTNETWORK:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9092,DIFFERENTNETWORK://0.0.0.0:9092
+      - KAFKA_ADVERTISED_LISTENERS=EXTERNAL://localhost:9092,INTERNAL://atlas-kafka:9092, DIFFERENTNETWORK://host.docker.internal:9092
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - ALLOW_PLAINTEXT_LISTENER=true
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8082:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=atlas-kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=atlas-zk:2181
+      - KAFKA_BROKERCONNECT=atlas-kafka:9092
+      - DYNAMIC_CONFIG_ENABLED=true
+    networks:
+      - apache
+    depends_on:
+      atlas-kafka:
+        condition: service_started
+      atlas-zk:
+        condition: service_started
+
+volumes:
+  postgres-db:
+
+networks:
+  apache:
+    external: true
+    name: apache
+
