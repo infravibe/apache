@@ -1,1 +1,6 @@
+Step1: create asw folder in conf forlder. then go inside aws folder and run below command.
 mvn dependency:copy -Dartifact=com.amazonaws:aws-java-sdk-bundle:1.12.262 -DoutputDirectory=.
+
+run docker network create --driver=bridge apache
+
+run docker compose up -d
