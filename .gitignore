@@ -5,3 +5,4 @@ hiveserver2.pid
 log
 atlas-hive-s3-zk-kafka-solr-hbase/log
 atlas-hive-s3-zk-kafka-solr-hbase/conf/aws
+whilter/log

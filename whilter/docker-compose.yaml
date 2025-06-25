@@ -1,0 +1,322 @@
+services:
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    container_name: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_DB: 'postgres'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-db:/var/lib/postgresql
+      - ./initdb:/docker-entrypoint-initdb.d   # Mount custom SQL scripts
+    networks:
+      - apache
+
+  atlas:
+    image: infravibe/atlas:2.4.0
+    platform: linux/amd64
+    container_name: atlas
+    stdin_open: true
+    tty: true
+    networks:
+      - apache
+    volumes:
+      - ./data:/home/atlas/data
+    ports:
+      - "21000:21000"
+    depends_on:
+      atlas-hbase:
+        condition: service_started
+      atlas-kafka:
+        condition: service_started
+      atlas-solr:
+        condition: service_started
+      atlas-zk:
+        condition: service_started
+    environment:
+      - ATLAS_SERVER_JAVA_VERSION="11"
+      - ATLAS_VERSION="2.4.0"
+    command:
+      - /home/atlas/scripts/atlas.sh
+
+  atlas-zk:
+    image: infravibe/atlas-zk:2.4.0
+    platform: linux/amd64
+    container_name: atlas-zk
+    networks:
+      - apache
+    ports:
+      - "2181:2181"
+
+  atlas-solr:
+    image: infravibe/atlas-solr:2.4.0
+    platform: linux/amd64
+    container_name: atlas-solr
+    networks:
+      - apache
+    ports:
+      - "8983:8983"
+
+  atlas-hadoop:
+    image: infravibe/atlas-hadoop:2.4.0-hadoop-3.3.6
+    platform: linux/amd64
+    container_name: atlas-hadoop
+    stdin_open: true
+    tty: true
+    networks:
+      - apache
+    ports:
+      - "9000:9000"
+      - "8089:8088"
+    healthcheck:
+      test: "hdfs dfs -ls /"
+      interval: 1m30s
+      timeout: 10s
+      retries: 30
+      start_period: 40s
+    environment:
+      - HADOOP_VERSION="3.3.6"
+
+  atlas-hbase:
+    image: infravibe/atlas-hbase:2.4.0-hbase-2.5.0
+    platform: linux/amd64
+    container_name: atlas-hbase
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./config/hbase/hbase-site.xml:/opt/hbase/conf/hbase-site.xml
+      - ./log:/opt/hbase/logs
+    networks:
+      - apache
+    ports:
+      - "16000:16000"
+      - "16010:16010"
+      - "16020:16020"
+      - "16030:16030"
+    depends_on:
+      atlas-hadoop:
+        condition: service_healthy
+      atlas-zk:
+        condition: service_started
+      atlas-kafka:
+        condition: service_started
+    environment:
+      - HBASE_VERSION="2.5.0"
+      - ATLAS_VERSION="2.4.0"
+
+  atlas-kafka:
+    image: infravibe/atlas-kafka:2.4.0-kafka-2.8.2
+    platform: linux/amd64
+    container_name: atlas-kafka
+    stdin_open: true
+    tty: true
+    networks:
+      - apache
+    ports:
+      - "9092:9092"
+    depends_on:
+      - atlas-zk
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=atlas-zk:2181
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT, DIFFERENTNETWORK:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9092,DIFFERENTNETWORK://0.0.0.0:9092
+      - KAFKA_ADVERTISED_LISTENERS=EXTERNAL://localhost:9092,INTERNAL://atlas-kafka:9092, DIFFERENTNETWORK://host.docker.internal:9092
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - ALLOW_PLAINTEXT_LISTENER=true
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8082:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=atlas-kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=atlas-zk:2181
+      - KAFKA_BROKERCONNECT=atlas-kafka:9092
+      - DYNAMIC_CONFIG_ENABLED=true
+    networks:
+      - apache
+    depends_on:
+      - atlas-kafka
+      - atlas-zk
+
+  namenode:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: namenode
+    container_name: namenode
+    privileged: true
+    command: >
+      bash -c "
+        if [ ! -d /hadoop/dfs/name/current ]; then
+          echo 'Formatting NameNode...';
+          hdfs namenode -format -force -nonInteractive;
+        fi;
+        hdfs namenode
+      "
+    environment:
+      - HDFS_NAMENODE_USER=root
+    user: root
+    volumes:
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+      - ./config/hadoop/setup_hdfs_dirs.sh:/opt/hadoop/setup_hdfs_dirs.sh
+      - namenode_data:/hadoop/dfs/name
+    ports:
+      - "9870:9870"  # NameNode Web UI
+      - "9820:9820"  # NameNode RPC
+    networks:
+      - apache
+
+  datanode1:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: datanode1
+    container_name: datanode1
+    user: root
+    command: [ "hdfs", "datanode" ]
+    volumes:
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+      - datanode1_data:/hadoop/dfs/data
+    ports:
+      - "9864:9864"  # DataNode Web UI
+      - "9866:9866"  # DataNode IPC
+    depends_on:
+      - namenode
+    networks:
+      - apache
+
+  datanode2:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: datanode2
+    container_name: datanode2
+    user: root
+    command: [ "hdfs", "datanode" ]
+    volumes:
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+      - datanode2_data:/hadoop/dfs/data
+    ports:
+      - "9865:9864"  # DataNode Web UI
+      - "9867:9866"  # DataNode IPC
+    depends_on:
+      - namenode
+    networks:
+      - apache
+
+  resourcemanager:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: resourcemanager
+    container_name: resourcemanager
+    user: root
+    command: [ "yarn", "resourcemanager" ]
+    volumes:
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+    ports:
+      - "8088:8088"  # ResourceManager Web UI
+      - "8030:8030"  # ResourceManager Scheduler
+      - "8031:8031"  # ResourceManager Resource Tracker
+      - "8032:8032"  # ResourceManager Admin
+      - "8033:8033"  # ResourceManager Client
+    depends_on:
+      - namenode
+      - datanode1
+      - datanode2
+    networks:
+      - apache
+
+  nodemanager1:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: nodemanager1
+    container_name: nodemanager1
+    user: root
+    command: [ "yarn", "nodemanager" ]
+    volumes:
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+    ports:
+      - "8042:8042"  # NodeManager Web UI
+    depends_on:
+      - resourcemanager
+    networks:
+      - apache
+
+  nodemanager2:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: nodemanager2
+    user: root
+    container_name: nodemanager2
+    command: [ "yarn", "nodemanager" ]
+    volumes:
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+    ports:
+      - "8043:8042"  # NodeManager Web UI
+    depends_on:
+      - resourcemanager
+    networks:
+      - apache
+
+  historyserver:
+    image: infravibe/hadoop:3.3.6
+    platform: linux/amd64
+    hostname: historyserver
+    container_name: historyserver
+    user: root
+    command: [ "mapred", "historyserver" ]
+    volumes:
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+    ports:
+      - "8188:8188"  # History Server Web UI
+      - "19888:19888" # MapReduce JobHistory Web UI
+      - "10020:10020" # JobHistory Server
+    depends_on:
+      - namenode
+      - datanode1
+      - datanode2
+      - resourcemanager
+    networks:
+      - apache
+
+  metastore:
+    image: infravibe/atlas-hive:4.0.1
+    platform: linux/amd64
+    restart: unless-stopped
+    container_name: metastore
+    hostname: metastore
+    depends_on:
+      - namenode
+      - postgres
+    environment:
+      DB_DRIVER: postgres
+      SERVICE_NAME: 'metastore'
+      SERVICE_OPTS: '-Xmx1G -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver
+                       -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore_db
+                       -Djavax.jdo.option.ConnectionUserName=hive
+                       -Djavax.jdo.option.ConnectionPassword=password
+                       -Dfs.defaultFS=hdfs://namenode:9820'
+    ports:
+      - '9083:9083'
+    volumes:
+      - ./config/hive/metastore:/opt/hive/conf
+      - ./config/postgres/postgresql-42.7.4.jar:/opt/hive/lib/postgresql-42.7.4.jar
+    networks:
+      - apache
+
+volumes:
+  postgres-db:
+  namenode_data:
+  datanode1_data:
+  datanode2_data:
+
+networks:
+  apache:
+    external: true
+    name: apache
