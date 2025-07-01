@@ -2,10 +2,7 @@
 .DS_Store
 data
 hiveserver2.pid
-log
-atlas-hive-s3-zk-kafka-solr-hbase/log
-atlas-hive-s3-zk-kafka-solr-hbase/conf/aws
-whilter/log
 
 **/data/
 **/log/
+atlas-ranger-hive/conf/hive/hiveserver2/.[!.]*

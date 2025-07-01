@@ -1,0 +1,53 @@
+
+services:
+  metastore:
+    image: hive:atlas_2.4.0-ranger_2.6.0-4.0.1
+    platform: linux/amd64
+    restart: unless-stopped
+    container_name: metastore
+    hostname: metastore
+    environment:
+      DB_DRIVER: postgres
+      SERVICE_NAME: 'metastore'
+      SERVICE_OPTS: '-Xmx1G -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver
+                     -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore_db
+                     -Djavax.jdo.option.ConnectionUserName=hive
+                     -Djavax.jdo.option.ConnectionPassword=password
+                     -Dfs.defaultFS=hdfs://namenode:9820'
+    ports:
+      - '9083:9083'
+    volumes:
+      - ./conf/hive/metastore:/opt/hive/conf
+#      - warehouse:/opt/hive/data/warehouse
+      - ./conf/postgres/postgresql-42.7.4.jar:/opt/hive/lib/postgresql-42.7.4.jar
+    networks:
+      - apache
+
+  hiveserver2:
+    image: hive:atlas_2.4.0-ranger_2.6.0-4.0.1
+    platform: linux/amd64
+    user: root
+    depends_on:
+      - metastore
+    restart: unless-stopped
+    container_name: hiveserver2
+    environment:
+      HIVE_SERVER2_THRIFT_PORT: 10000
+      SERVICE_OPTS: '-Xmx1G -Dhive.metastore.uris=thrift://metastore:9083'
+      IS_RESUME: 'true'
+      SERVICE_NAME: 'hiveserver2'
+    volumes:
+      - ./conf/hive/hiveserver2:/opt/hive/conf
+    ports:
+      - '10000:10000'
+      - '10002:10002'
+    networks:
+      - apache
+
+volumes:
+  hive-db:
+
+networks:
+  apache:
+    external: true
+    name: apache

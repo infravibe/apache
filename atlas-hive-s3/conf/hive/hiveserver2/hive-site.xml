@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Hive Warehouse Directory in S3 -->
+    <property>
+        <name>hive.metastore.warehouse.dir</name>
+        <value>s3a://mlhub-iceberg/user/hive/warehouse</value>
+    </property>
+
+    <!-- Hive Metastore URI (remote metastore) -->
+    <property>
+        <name>hive.metastore.uris</name>
+        <value>thrift://metastore:9083</value>
+    </property>
+
+    <!-- S3A Filesystem Configuration -->
+    <property>
+        <name>fs.defaultFS</name>
+        <value>s3a://mlhub-iceberg</value>
+    </property>
+    <property>
+        <name>fs.s3a.access.key</name>
+        <value>DUMMY</value>
+    </property>
+    <property>
+        <name>fs.s3a.secret.key</name>
+        <value>DUMMY</value>
+    </property>
+    <property>
+        <name>fs.s3a.endpoint</name>
+        <value>s3.ap-south-1.amazonaws.com</value>
+    </property>
+    <property>
+        <name>fs.s3a.impl</name>
+        <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
+    </property>
+    <property>
+        <name>fs.s3a.path.style.access</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>fs.s3a.fast.upload</name>
+        <value>true</value>
+    </property>
+
+    <!-- HiveServer2 Settings -->
+<!--    <property>-->
+<!--        <name>hive.server2.thrift.bind.host</name>-->
+<!--        <value>0.0.0.0</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>hive.server2.thrift.port</name>-->
+<!--        <value>10000</value>-->
+<!--    </property>-->
+    <property>
+        <name>hive.server2.enable.doAs</name>
+        <value>false</value>
+    </property>
+
+    <!-- HiveServer2 Web UI -->
+<!--    <property>-->
+<!--        <name>hive.server2.webui.enable</name>-->
+<!--        <value>true</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>hive.server2.webui.host</name>-->
+<!--        <value>0.0.0.0</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>hive.server2.webui.port</name>-->
+<!--        <value>10002</value>-->
+<!--    </property>-->
+
+    <!-- Atlas Hook for HiveServer2 -->
+    <property>
+        <name>hive.exec.post.hooks</name>
+        <value>org.apache.atlas.hive.hook.HiveHook</value>
+    </property>
+
+    <!-- Disable auth-->
+<!--    <property>-->
+<!--        <name>hive.security.authorization.enabled</name>-->
+<!--        <value>false</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>hive.metastore.event.db.notification.api.auth</name>-->
+<!--        <value>false</value>-->
+<!--    </property>-->
+
+    <!-- Optional but Recommended -->
+    <property>
+        <name>hive.server2.enable.doAs</name>
+        <value>false</value>
+    </property>
+</configuration>
