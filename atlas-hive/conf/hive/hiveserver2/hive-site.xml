@@ -11,13 +11,13 @@
     <!-- Core HDFS Configuration -->
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://namenode:9820</value>
+        <value>hdfs://192.168.100.29:9820</value>
     </property>
 
     <!-- Hive Warehouse Location in HDFS -->
     <property>
         <name>hive.metastore.warehouse.dir</name>
-        <value>hdfs://namenode:9820/user/hive/warehouse</value>
+        <value>hdfs://192.168.100.29:9820/user/hive/warehouse</value>
     </property>
 
     <!-- Hive Metastore Database Connection -->
@@ -59,11 +59,11 @@
     </property>
     <property>
         <name>hive.exec.scratchdir</name>
-        <value>hdfs://namenode:9820/hive/tmp</value>
+        <value>hdfs://192.168.100.29:9820/hive/tmp</value>
     </property>
     <property>
         <name>hive.user.install.directory</name>
-        <value>hdfs://namenode:9820/user/hive/install</value>
+        <value>hdfs://192.168.100.29:9820/user/hive/install</value>
     </property>
     <property>
         <name>hive.exec.submit.local.task.via.child</name>
@@ -113,9 +113,9 @@
         <value>org.apache.atlas.hive.hook.HiveHook</value>
     </property>
 
-    <property>
-        <name>hive.metastore.event.listeners</name>
-        <value>org.apache.atlas.hive.hook.HiveMetastoreHook</value>
-    </property>
+<!--    <property>-->
+<!--        <name>hive.metastore.event.listeners</name>-->
+<!--        <value>org.apache.atlas.hive.hook.HiveMetastoreHook</value>-->
+<!--    </property>-->
 
 </configuration>

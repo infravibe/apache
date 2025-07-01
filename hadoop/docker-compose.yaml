@@ -19,6 +19,7 @@ services:
     user: root
     volumes:
       - ./config:/opt/hadoop/etc/hadoop
+      - ./config/setup_hdfs_dirs.sh:/opt/hadoop/setup_hdfs_dirs.sh
       - namenode_data:/hadoop/dfs/name
     ports:
       - "9870:9870"  # NameNode Web UI
@@ -38,6 +39,7 @@ services:
       - datanode1_data:/hadoop/dfs/data
     ports:
       - "9864:9864"  # DataNode Web UI
+      - "9866:9866"  # DataNode IPC
     depends_on:
       - namenode
     networks:
@@ -55,6 +57,7 @@ services:
       - datanode2_data:/hadoop/dfs/data
     ports:
       - "9865:9864"  # DataNode Web UI
+      - "9867:9866"  # DataNode IPC
     depends_on:
       - namenode
     networks:

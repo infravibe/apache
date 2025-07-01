@@ -1,0 +1,49 @@
+services:
+  atlas-zk:
+    image: infravibe/atlas-zk:2.4.0
+    platform: linux/amd64
+    container_name: atlas-zk
+    networks:
+      - apache
+    ports:
+      - "2181:2181"
+
+  atlas-kafka:
+    image: infravibe/atlas-kafka:2.4.0-kafka-2.8.2
+    platform: linux/amd64
+    container_name: atlas-kafka
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./config/kafka/server.properties:/opt/kafka/config/server.properties
+    networks:
+      - apache
+    ports:
+      - "9092:9092"     # EXTERNAL
+      - "29092:29092"   # INTERNAL
+      - "39092:39092"   # DIFFERENTNETWORK
+      - "49092:49092"   # LOCAL
+    depends_on:
+      - atlas-zk
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8082:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=atlas-kafka:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=atlas-zk:2181
+      - KAFKA_BROKERCONNECT=atlas-kafka:9092
+      - DYNAMIC_CONFIG_ENABLED=true
+    networks:
+      - apache
+    depends_on:
+      - atlas-kafka
+      - atlas-zk
+
+networks:
+  apache:
+    external: true
+    name: apache

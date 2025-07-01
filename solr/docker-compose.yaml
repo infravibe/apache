@@ -1,0 +1,14 @@
+services:
+  atlas-solr:
+    image: infravibe/solr:8
+    platform: linux/amd64
+    container_name: atlas-solr
+    networks:
+      - apache
+    ports:
+      - "8983:8983"
+
+networks:
+  apache:
+    external: true
+    name: apache

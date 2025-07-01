@@ -36,14 +36,14 @@ services:
     ports:
       - "2181:2181"
 
-  atlas-solr:
-    image: infravibe/atlas-solr:2.4.0
-    platform: linux/amd64
-    container_name: atlas-solr
-    networks:
-      - apache
-    ports:
-      - "8983:8983"
+#  atlas-solr:
+#    image: infravibe/atlas-solr:2.4.0
+#    platform: linux/amd64
+#    container_name: atlas-solr
+#    networks:
+#      - apache
+#    ports:
+#      - "8983:8983"
 
   atlas-hadoop:
     image: infravibe/atlas-hadoop:2.4.0-hadoop-3.3.6

@@ -1,0 +1,20 @@
+
+services:
+  ranger:
+    image: apache/ranger:2.6.0
+    container_name: ranger
+    volumes:
+      - ./conf/ranger-admin-install-postgres.properties:/opt/ranger/ranger-2.6.0-admin/install.properties
+    networks:
+      - apache
+    ports:
+      - "6080:6080"
+    environment:
+      - RANGER_VERSION=2.6.0
+      - RANGER_DB_TYPE=postgres
+    command: /home/ranger/scripts/ranger.sh
+
+networks:
+  apache:
+    external: true
+    name: apache

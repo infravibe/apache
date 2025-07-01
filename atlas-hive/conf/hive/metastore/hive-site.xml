@@ -4,13 +4,13 @@
     <!-- Core HDFS Configuration -->
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://13.126.6.218:9820</value>
+        <value>hdfs://namenode:9820</value>
     </property>
 
     <!-- Hive Warehouse Location in HDFS -->
     <property>
         <name>hive.metastore.warehouse.dir</name>
-        <value>hdfs://13.126.6.218:9820/user/hive/warehouse</value>
+        <value>hdfs://namenode:9820/user/hive/warehouse</value>
     </property>
 
     <!-- Hive Metastore Database Connection -->
@@ -32,14 +32,14 @@
     </property>
 
     <!-- Other Required Properties -->
-    <property>
-        <name>datanucleus.schema.autoCreateAll</name>
-        <value>false</value>
-    </property>
-    <property>
-        <name>hive.metastore.schema.verification</name>
-        <value>true</value>
-    </property>
+<!--    <property>-->
+<!--        <name>datanucleus.schema.autoCreateAll</name>-->
+<!--        <value>false</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>hive.metastore.schema.verification</name>-->
+<!--        <value>true</value>-->
+<!--    </property>-->
     <property>
         <name>hive.metastore.db.type</name>
         <value>postgres</value>
@@ -52,49 +52,54 @@
     </property>
     <property>
         <name>hive.exec.scratchdir</name>
-        <value>hdfs://13.126.6.218:9820/hive/tmp</value>
+        <value>hdfs://namenode:9820/hive/tmp</value>
     </property>
     <property>
         <name>hive.user.install.directory</name>
-        <value>hdfs://13.126.6.218:9820/user/hive/install</value>
+        <value>hdfs://namenode:9820/user/hive/install</value>
     </property>
-    <property>
-        <name>hive.exec.submit.local.task.via.child</name>
-        <value>false</value>
-    </property>
-    <property>
-        <name>hive.tez.exec.inplace.progress</name>
-        <value>false</value>
-    </property>
-    <property>
-        <name>hive.tez.exec.print.summary</name>
-        <value>true</value>
-    </property>
-    <property>
-        <name>tez.runtime.optimize.local.fetch</name>
-        <value>true</value>
-    </property>
-    <property>
-        <name>hive.compactor.worker.threads</name>
-        <value>1</value>
-    </property>
-    <property>
-        <name>tez.local.mode</name>
-        <value>true</value>
-    </property>
-    <property>
-        <name>mapreduce.framework.name</name>
-        <value>local</value>
-    </property>
-    <property>
-        <name>metastore.metastore.event.db.notification.api.auth</name>
-        <value>false</value>
-    </property>
+<!--    <property>-->
+<!--        <name>hive.exec.submit.local.task.via.child</name>-->
+<!--        <value>false</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>hive.tez.exec.inplace.progress</name>-->
+<!--        <value>false</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>hive.tez.exec.print.summary</name>-->
+<!--        <value>true</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>tez.runtime.optimize.local.fetch</name>-->
+<!--        <value>true</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>hive.compactor.worker.threads</name>-->
+<!--        <value>1</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>tez.local.mode</name>-->
+<!--        <value>true</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>mapreduce.framework.name</name>-->
+<!--        <value>local</value>-->
+<!--    </property>-->
+<!--    <property>-->
+<!--        <name>metastore.metastore.event.db.notification.api.auth</name>-->
+<!--        <value>false</value>-->
+<!--    </property>-->
 
 <!--    Atlas Hook-->
+<!--    <property>-->
+<!--        <name>hive.exec.post.hooks</name>-->
+<!--        <value>org.apache.atlas.hive.hook.HiveHook</value>-->
+<!--    </property>-->
+
     <property>
-        <name>hive.exec.post.hooks</name>
-        <value>org.apache.atlas.hive.hook.HiveHook</value>
+        <name>dfs.client.use.datanode.hostname</name>
+        <value>true</value>
     </property>
 
     <property>

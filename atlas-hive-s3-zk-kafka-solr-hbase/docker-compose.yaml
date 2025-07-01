@@ -143,6 +143,8 @@ services:
     container_name: atlas-kafka
     stdin_open: true
     tty: true
+    volumes:
+      - ./conf/kafka/server.properties:/opt/kafka/config/server.properties
     networks:
       - apache
     ports:
@@ -150,15 +152,6 @@ services:
     depends_on:
       atlas-zk:
         condition: service_started
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=atlas-zk:2181
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT, DIFFERENTNETWORK:PLAINTEXT
-      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9092,DIFFERENTNETWORK://0.0.0.0:9092
-      - KAFKA_ADVERTISED_LISTENERS=EXTERNAL://localhost:9092,INTERNAL://atlas-kafka:9092, DIFFERENTNETWORK://host.docker.internal:9092
-      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
-      - ALLOW_PLAINTEXT_LISTENER=true
 
   kafka-ui:
     container_name: kafka-ui
